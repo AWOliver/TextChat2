@@ -32,7 +32,7 @@ public class Server implements Runnable {
                 connections.add(handler); //Appends the specified element to the end of this list.
                 pool.execute(handler); //gives the user a thread to communicate on
             }
-        } catch (IOException e) {
+        } catch (IOException e) { //Exits program if try does not work
             shutdown();
         }
 
@@ -44,20 +44,19 @@ public class Server implements Runnable {
                 if (ch.nickname.equals(nickname)) { //Do not send message to message owner twice.(NEEDS TO BE REMOVED WHEN GRAPHICS IS DONE)
                     continue;
                 }
-                //Send the message if it isn´t the message owner.
-                ch.sendMessage(message);
+                ch.sendMessage(message); //Send the message if it isn´t the message owner.
             }
         }
     }
     public void shutdown() { //Close and shutdown
         try {
-            done = true;
-            pool.shutdown();
+            done = true; //Exits the sockets accept process
+            pool.shutdown(); //Turns off the pool of connections between server and clients
             if (!server.isClosed()) {
-                server.close();
+                server.close(); //Makes sure the server turns off
             }
             for (ConnectionHandler ch : connections) {
-                ch.shutdown();
+                ch.shutdown();      //Cancelling each socket with a client.
             }
         } catch (IOException e) {
             // ignore
@@ -71,7 +70,7 @@ public class Server implements Runnable {
         private PrintWriter out;
         private String nickname;
 
-        public ConnectionHandler(Socket client) {
+        public ConnectionHandler(Socket client) { //Creates a method to access a specific client to the server
             this.client = client;
         }
 
@@ -81,8 +80,8 @@ public class Server implements Runnable {
                 out = new PrintWriter(client.getOutputStream(), true); //Initializing writer
                 in = new BufferedReader(new InputStreamReader(client.getInputStream())); //Initializing reader
                 out.println("Please enter a nickname: ");
-                nickname = in.readLine();
-                System.out.println(nickname + " connected!");
+                nickname = in.readLine(); // sets nickname
+                System.out.println(nickname + " connected!"); //Loads the broadcast function
                 broadcast(nickname + " joined the chat!", nickname);
                 String message;
                 while ((message = in.readLine()) != null) {
