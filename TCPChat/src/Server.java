@@ -38,13 +38,13 @@ public class Server implements Runnable {
 
     }
 
-    public void broadcast(String message, String nickname) { //Send message to all people in the ConnectionHandler
-        for (ConnectionHandler ch : connections) {
-            if (ch != null) {
-                if (ch.nickname.equals(nickname)) { //Do not send message to message owner twice.(NEEDS TO BE REMOVED WHEN GRAPHICS IS DONE)
+    public void broadcast(String message, String nickname) {
+        for (ConnectionHandler ch : connections) { //Send message to all people in the ConnectionHandler
+            if (ch != null) { //Do not send message to message owner twice.(NEEDS TO BE REMOVED WHEN GRAPHICS IS DONE)
+                if (ch.nickname.equals(nickname)) { //Send the message if it isn´t the message owner.
                     continue;
                 }
-                ch.sendMessage(message); //Send the message if it isn´t the message owner.
+                ch.sendMessage(message);
             }
         }
     }
@@ -72,7 +72,7 @@ public class Server implements Runnable {
 
         public ConnectionHandler(Socket client) { //Creates a method to access a specific client to the server
             this.client = client;
-        }
+        } //tells the method o use a specific client
 
         @Override
         public void run() {
@@ -81,17 +81,17 @@ public class Server implements Runnable {
                 in = new BufferedReader(new InputStreamReader(client.getInputStream())); //Initializing reader
                 out.println("Please enter a nickname: ");
                 nickname = in.readLine(); // sets nickname
-                System.out.println(nickname + " connected!"); //Loads the broadcast function
-                broadcast(nickname + " joined the chat!", nickname);
+                System.out.println(nickname + " connected!"); //Writes confirmation in the chat
+                broadcast(nickname + " joined the chat!", nickname); //sends messages to the other users
                 String message;
-                while ((message = in.readLine()) != null) {
-                    if (message.startsWith("/nickname")) { //NICK COMMAND
-                        String[] messageSplit = message.split(" ", 2);
+                while ((message = in.readLine()) != null) { //proceed if there is a message
+                    if (message.startsWith("/nickname")) { //command to rename
+                        String[] messageSplit = message.split(" ", 2); //tells where to split the message
                         if (messageSplit.length == 2) {
-                            broadcast(nickname + " renamed themselves to " + messageSplit[1], nickname);
-                            System.out.println(nickname + " changed nickname to " + messageSplit[1]);
-                            nickname = messageSplit[1];
-                            out.println("Successfully changed nickname to " + nickname);
+                            broadcast(nickname + " renamed themselves to " + messageSplit[1], nickname); //broadcasts the renaming of a client
+                            System.out.println(nickname + " changed nickname to " + messageSplit[1]); //prints in chat
+                            nickname = messageSplit[1]; //sets new nickname
+                            out.println("Successfully changed nickname to " + nickname); //makes sure the process finished
                         } else {
                             out.println("No nickname provided!");
                         }
@@ -101,7 +101,7 @@ public class Server implements Runnable {
                         System.out.println(nickname + " disconnected!");
                         //shutdown();
                     } else {
-                        if(nickname.equalsIgnoreCase("panda19")) {
+                        if(nickname.equalsIgnoreCase("Ollibolli")) {
                             broadcast("(Owner) " + nickname + ": " + message, nickname);
                             System.out.println("Owner Found");
                         } else {
