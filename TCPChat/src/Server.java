@@ -93,24 +93,24 @@ public class Server implements Runnable {
                             nickname = messageSplit[1]; //sets new nickname
                             out.println("Successfully changed nickname to " + nickname); //makes sure the process finished
                         } else {
-                            out.println("No nickname provided!");
+                            out.println("No nickname provided!"); //if earlier commando fails
                         }
                     } else if (message.startsWith("/quit")) {
                         shutdown();
                         broadcast(nickname + " left the chat!", nickname);
                         System.out.println(nickname + " disconnected!");
-                        //shutdown();
+                        //shutdown();                                       //disconnects client if commando is given
                     } else {
                         if(nickname.equalsIgnoreCase("Ollibolli")) {
                             broadcast("(Owner) " + nickname + ": " + message, nickname);
-                            System.out.println("Owner Found");
+                            System.out.println("Owner Found");                              //Creates special message when owner is writing
                         } else {
-                            broadcast(nickname + ": " + message, nickname);
+                            broadcast(nickname + ": " + message, nickname); //default message
                         }
                     }
                 }
             } catch (IOException e) {
-                shutdown();
+                shutdown();         //if nothing works, turn off
             }
         }
         public void sendMessage(String message) {
@@ -119,7 +119,7 @@ public class Server implements Runnable {
         public void shutdown() {
             try {
                 in.close();
-                out.close();
+                out.close();                //Shuts down server and kicks clients
                 if (!client.isClosed()) {
                     client.close();
                 }
@@ -131,6 +131,6 @@ public class Server implements Runnable {
 
     public static void main(String[] args) {
         Server server = new Server();
-        server.run();
+         server.run();
     }
 }
