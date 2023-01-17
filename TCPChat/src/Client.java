@@ -18,11 +18,17 @@ public class Client implements Runnable, ActionListener {
     private Socket client;
     private BufferedReader in;
     private PrintWriter out;
-    private boolean done;               //instance variable
+    private boolean done;
+
+    private int number;
+
+    //instance variable
 
     @Override
     public void run() {
         try {
+
+            number = 0;
             frame = new JFrame();
             panel = new JPanel();
 
@@ -37,8 +43,10 @@ public class Client implements Runnable, ActionListener {
             frame.add(panel, BorderLayout.CENTER);
             frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
             frame.pack();
-            frame.setVisible(true);                         //Creates GUI
-            
+            frame.setVisible(true);         //Creates GUI
+            label.setText("You have clicked:" + number + "times");
+            panel.add(label);
+
             client = new Socket("localhost", 9999);
             out = new PrintWriter(client.getOutputStream(), true);
             in = new BufferedReader(new InputStreamReader(client.getInputStream()));        //Creates input and output between the client and server
@@ -71,7 +79,8 @@ public class Client implements Runnable, ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-
+        number++;
+        label.setText("You have clicked:" + number + "times");
     }
 
     class InputHandler implements Runnable {
