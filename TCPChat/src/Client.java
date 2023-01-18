@@ -15,37 +15,37 @@ public class Client implements Runnable, ActionListener {
     JPanel panel;
     JButton button;
     JLabel label;
+
+    JTextField tField;
     private Socket client;
     private BufferedReader in;
     private PrintWriter out;
-    private boolean done;
-
-    private int number;
-
-    //instance variable
+    private boolean done;       //instance variable
 
     @Override
     public void run() {
         try {
 
-            number = 0;
             frame = new JFrame();
             panel = new JPanel();
-
-            button = new JButton();
-            button.addActionListener(this);
-
             label = new JLabel();
-
-            panel.setBorder(BorderFactory.createEmptyBorder(50, 30, 50, 30));
+            panel.setBorder(BorderFactory.createEmptyBorder(0, 0, 200, 200));
             panel.setLayout(new GridLayout(0, 1));
-            panel.add(button);
             frame.add(panel, BorderLayout.CENTER);
             frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
             frame.pack();
             frame.setVisible(true);         //Creates GUI
-            label.setText("You have clicked:" + number + "times");
-            panel.add(label);
+
+            tField = new JTextField();
+            //tField.setPreferredSize(new Dimension(10, 5));
+            panel.add(tField);
+
+            button = new JButton("View Chat Logs");
+            //button.setPreferredSize(new Dimension(10, 5));
+            button.setBorder(BorderFactory.createEmptyBorder(10, 10, 60, 60));
+            button.addActionListener(this);
+            panel.add(button);
+
 
             client = new Socket("localhost", 9999);
             out = new PrintWriter(client.getOutputStream(), true);
@@ -79,8 +79,6 @@ public class Client implements Runnable, ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        number++;
-        label.setText("You have clicked:" + number + "times");
     }
 
     class InputHandler implements Runnable {
