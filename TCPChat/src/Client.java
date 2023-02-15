@@ -25,7 +25,7 @@ public class Client implements Runnable, ActionListener {
     @Override
     public void run() {
         try {
-
+/*
             frame = new JFrame();
             panel = new JPanel();
             label = new JLabel();
@@ -44,7 +44,7 @@ public class Client implements Runnable, ActionListener {
             //button.setPreferredSize(new Dimension(10, 5));
             button.setBorder(BorderFactory.createEmptyBorder(10, 10, 60, 60));
             button.addActionListener(this);
-            panel.add(button);
+            panel.add(button); */
 
 
             client = new Socket("localhost", 9999);
