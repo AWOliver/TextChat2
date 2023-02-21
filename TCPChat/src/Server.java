@@ -10,7 +10,7 @@ import java.util.concurrent.Executors;
 
 public class Server implements Runnable {
 
-    private ArrayList<ConnectionHandler> connections;
+    private final ArrayList<ConnectionHandler> connections;
     private ServerSocket server; //A server socket waits for requests to come in over the network. It performs some operation based on that request, and then possibly returns a result to the requester.
     private boolean done;
     private ExecutorService pool;
@@ -65,7 +65,7 @@ public class Server implements Runnable {
 
     class ConnectionHandler implements Runnable { //Inner Class that represent all people that connects via a client.
 
-        private Socket client;
+        private final Socket client;
         private BufferedReader in;
         private PrintWriter out;
         private String nickname;

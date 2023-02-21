@@ -1,5 +1,4 @@
 import javax.swing.*;
-import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.BufferedReader;
@@ -14,9 +13,9 @@ public class Client implements Runnable, ActionListener {
     JFrame frame;
     JPanel panel;
     JButton button;
-    JLabel label;
+    //JLabel label;
 
-    JTextField tField;
+    //JTextField tField;
     private Socket client;
     private BufferedReader in;
     private PrintWriter out;
@@ -25,26 +24,22 @@ public class Client implements Runnable, ActionListener {
     @Override
     public void run() {
         try {
-/*
+
             frame = new JFrame();
             panel = new JPanel();
-            label = new JLabel();
-            panel.setBorder(BorderFactory.createEmptyBorder(0, 0, 200, 200));
-            panel.setLayout(new GridLayout(0, 1));
-            frame.add(panel, BorderLayout.CENTER);
-            frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+
+            frame.setSize(400, 300);
+            frame.add(panel);
+            frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
             frame.pack();
-            frame.setVisible(true);         //Creates GUI
+            frame.setVisible(true);        //Creates GUI
 
-            tField = new JTextField();
-            //tField.setPreferredSize(new Dimension(10, 5));
-            panel.add(tField);
+            panel.setSize(400, 300);
 
-            button = new JButton("View Chat Logs");
-            //button.setPreferredSize(new Dimension(10, 5));
-            button.setBorder(BorderFactory.createEmptyBorder(10, 10, 60, 60));
-            button.addActionListener(this);
-            panel.add(button); */
+            button = new JButton();
+
+
+
 
 
             client = new Socket("localhost", 9999);
