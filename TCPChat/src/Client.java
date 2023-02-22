@@ -1,6 +1,3 @@
-import javax.swing.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -8,14 +5,8 @@ import java.io.PrintWriter;
 import java.net.Socket;                 //import
 
 
-public class Client implements Runnable, ActionListener {
+public class Client implements Runnable {
 
-    JFrame frame;
-    JPanel panel;
-    JButton button;
-    //JLabel label;
-
-    //JTextField tField;
     private Socket client;
     private BufferedReader in;
     private PrintWriter out;
@@ -24,23 +15,6 @@ public class Client implements Runnable, ActionListener {
     @Override
     public void run() {
         try {
-
-            frame = new JFrame();
-            panel = new JPanel();
-
-            frame.setSize(400, 300);
-            frame.add(panel);
-            frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-            frame.pack();
-            frame.setVisible(true);        //Creates GUI
-
-            panel.setSize(400, 300);
-
-            button = new JButton();
-
-
-
-
 
             client = new Socket("localhost", 9999);
             out = new PrintWriter(client.getOutputStream(), true);
@@ -52,7 +26,7 @@ public class Client implements Runnable, ActionListener {
 
             String inMessage;
             while((inMessage = in.readLine()) != null) {
-                System.out.println(inMessage); //sends message with, out function
+                System.out.println(inMessage); //
             }
         } catch (IOException e) {
             shutdown();
@@ -70,10 +44,6 @@ public class Client implements Runnable, ActionListener {
         } catch (IOException e) {
             // ignore
         }
-    }
-
-    @Override
-    public void actionPerformed(ActionEvent e) {
     }
 
     class InputHandler implements Runnable {
