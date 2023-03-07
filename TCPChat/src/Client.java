@@ -1,15 +1,14 @@
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
+import java.io.*;
 import java.net.Socket;                 //import
 
 
-public class Client implements Runnable {
+public class Client implements Runnable{
 
     private Socket client;
     private BufferedReader in;
     private PrintWriter out;
+
+    public BufferedWriter log;
     private boolean done;       //instance variable
 
     @Override
@@ -19,6 +18,7 @@ public class Client implements Runnable {
             client = new Socket("localhost", 9999);
             out = new PrintWriter(client.getOutputStream(), true);
             in = new BufferedReader(new InputStreamReader(client.getInputStream()));        //Creates input and output between the client and server
+            log = new BufferedWriter(new FileWriter("logs.txt"));
 
             InputHandler inHandler = new InputHandler();        //Connects to a thread where the user can communicate with the server
             Thread t = new Thread(inHandler);
