@@ -54,6 +54,7 @@ public class Client implements Runnable{
                 BufferedReader inReader = new BufferedReader(new InputStreamReader(System.in));
                 while (!done) {  //creates a variable for input by client
                     String message = inReader.readLine();
+                    log.write(message + "\n\n");
                     if (message.equals("/quit")) {  //quits program
                         out.println(message);
                         inReader.close();
