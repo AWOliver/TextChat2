@@ -7,10 +7,9 @@ public class Client implements Runnable{
     private Socket client;
     private BufferedReader in;
     private PrintWriter out;
+    private boolean done;       //Boolean to declare shutdown
 
-    public BufferedWriter log;
-    private boolean done;       //instance variable
-
+    Logs logs = new Logs();
     @Override
     public void run() {
         try {
@@ -18,7 +17,6 @@ public class Client implements Runnable{
             client = new Socket("localhost", 9999);
             out = new PrintWriter(client.getOutputStream(), true);
             in = new BufferedReader(new InputStreamReader(client.getInputStream()));        //Creates input and output between the client and server
-            log = new BufferedWriter(new FileWriter("logs.txt"));
 
             InputHandler inHandler = new InputHandler();        //Connects to a thread where the user can communicate with the server
             Thread t = new Thread(inHandler);
@@ -54,7 +52,9 @@ public class Client implements Runnable{
                 BufferedReader inReader = new BufferedReader(new InputStreamReader(System.in));
                 while (!done) {  //creates a variable for input by client
                     String message = inReader.readLine();
-                    log.write(message + "\n\n");
+                    if(message != null) {
+                        logs.logInput(message);
+                    }
                     if (message.equals("/quit")) {  //quits program
                         out.println(message);
                         inReader.close();
