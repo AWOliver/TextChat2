@@ -85,7 +85,7 @@ public class Server implements Runnable {
                 broadcast(nickname + " joined the chat!", nickname); //sends messages to the other users
                 String message;
                 while ((message = in.readLine()) != null) { //proceed if there is a message
-                    if (message.startsWith("/nickname")) { //command to rename
+                    if (message.startsWith("/newName")) { //command to rename
                         String[] messageSplit = message.split(" ", 2); //tells where to split the message
                         if (messageSplit.length == 2) {
                             broadcast(nickname + " renamed themselves to " + messageSplit[1], nickname); //broadcasts the renaming of a client

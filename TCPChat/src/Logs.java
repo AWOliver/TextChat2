@@ -6,11 +6,9 @@ public class Logs{
 
 public BufferedWriter log;
 
-String message;
 
     public void logInput(String message) {
         try {
-            message = this.message;
             log = new BufferedWriter(new FileWriter("logs.txt"));
             log.write(message + "\n\n");
             log.close();
