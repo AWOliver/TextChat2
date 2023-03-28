@@ -11,59 +11,61 @@ import java.util.concurrent.Executors;
 public class Server implements Runnable {
 
     private final ArrayList<ConnectionHandler> connections;
-    private ServerSocket server; //A server socket waits for requests to come in over the network. It performs some operation based on that request, and then possibly returns a result to the requester.
+    private ServerSocket server;
     private boolean done;
     private ExecutorService pool;
 
-    public Server() { //Class constructor
-        connections = new ArrayList<>(); //Initializing the arraylist
-        done = false; //Determining value for shutdown
+    public Server() {
+        connections = new ArrayList<>();
+        done = false;
     }
+    //declares list for users and boolean for shutdown
 
     @Override
-    public void run() { //Method that runs when application starts.
+    public void run() {
 
         try {
-            server = new ServerSocket(9999); //Initializing server
-            pool = Executors.newCachedThreadPool(); //Initializing pool
+            server = new ServerSocket(9999);
+            pool = Executors.newCachedThreadPool();
             while (!done) {
-                Socket client = server.accept(); //Listens for a connection to be made to this socket and accepts it. The method blocks until a connection is made.
-                ConnectionHandler handler = new ConnectionHandler(client); //creates a user with a given socket
-                connections.add(handler); //Appends the specified element to the end of this list.
-                pool.execute(handler); //gives the user a thread to communicate on
+                Socket client = server.accept();
+                ConnectionHandler handler = new ConnectionHandler(client);
+                connections.add(handler);
+                pool.execute(handler);
             }
-        } catch (IOException e) { //Exits program if try does not work
+        } catch (IOException e) {
             shutdown();
         }
-
     }
+    //creates server and connects clients
 
     public void broadcast(String message, String nickname) {
-        for (ConnectionHandler ch : connections) { //Send message to all people in the ConnectionHandler
-            if (ch != null) { //Do not send message to message owner twice.(NEEDS TO BE REMOVED WHEN GRAPHICS IS DONE)
-                if (ch.nickname.equals(nickname)) { //Send the message if it isn´t the message owner.
+        for (ConnectionHandler ch : connections) {
+            if (ch != null) {
+                if (ch.nickname.equals(nickname)) {
                     continue;
                 }
                 ch.sendMessage(message);
             }
         }
     }
-    public void shutdown() { //Close and shutdown
+    //template for message broadcast
+    public void shutdown() {
         try {
-            done = true; //Exits the sockets accept process
-            pool.shutdown(); //Turns off the pool of connections between server and clients
+            done = true;
+            pool.shutdown();
             if (!server.isClosed()) {
-                server.close(); //Makes sure the server turns off
+                server.close();
             }
             for (ConnectionHandler ch : connections) {
-                ch.shutdown();      //Cancelling each socket with a client.
+                ch.shutdown();
             }
         } catch (IOException e) {
-            // ignore
+
         }
     }
-
-    class ConnectionHandler implements Runnable { //Inner Class that represent all people that connects via a client.
+    //shutdown method
+    class ConnectionHandler implements Runnable {
 
         private final Socket client;
         private BufferedReader in;
@@ -72,45 +74,45 @@ public class Server implements Runnable {
 
         public ConnectionHandler(Socket client) { //Creates a method to access a specific client to the server
             this.client = client;
-        } //tells the method o use a specific client
+        }
 
         @Override
         public void run() {
             try {
-                out = new PrintWriter(client.getOutputStream(), true); //Initializing writer
-                in = new BufferedReader(new InputStreamReader(client.getInputStream())); //Initializing reader
+                out = new PrintWriter(client.getOutputStream(), true);
+                in = new BufferedReader(new InputStreamReader(client.getInputStream()));
                 out.println("Please enter a nickname: ");
                 nickname = in.readLine(); // sets nickname
-                System.out.println(nickname + " connected!"); //Writes confirmation in the chat
-                broadcast(nickname + " joined the chat!", nickname); //sends messages to the other users
+                System.out.println(nickname + " connected!");
+                broadcast(nickname + " joined the chat!", nickname);
                 String message;
-                while ((message = in.readLine()) != null) { //proceed if there is a message
-                    if (message.startsWith("/newName")) { //command to rename
-                        String[] messageSplit = message.split(" ", 2); //tells where to split the message
+                while ((message = in.readLine()) != null) {
+                    if (message.startsWith("/newName")) {
+                        String[] messageSplit = message.split(" ", 2);
                         if (messageSplit.length == 2) {
-                            broadcast(nickname + " renamed themselves to " + messageSplit[1], nickname); //broadcasts the renaming of a client
-                            System.out.println(nickname + " changed nickname to " + messageSplit[1]); //prints in chat
+                            broadcast(nickname + " renamed themselves to " + messageSplit[1], nickname);
+                            System.out.println(nickname + " changed nickname to " + messageSplit[1]);
                             nickname = messageSplit[1]; //sets new nickname
-                            out.println("Successfully changed nickname to " + nickname); //makes sure the process finished
+                            out.println("Successfully changed nickname to " + nickname);
                         } else {
-                            out.println("No nickname provided!"); //if earlier commando fails
+                            out.println("No nickname provided!");
                         }
                     } else if (message.startsWith("/quit")) {
                         shutdown();
                         broadcast(nickname + " left the chat!", nickname);
                         System.out.println(nickname + " disconnected!");
-                        //shutdown();                                       //disconnects client if commando is given
+                        //shutdown();
                     } else {
                         if(nickname.equalsIgnoreCase("Ollibolli")) {
                             broadcast("(Owner) " + nickname + ": " + message, nickname);
-                            System.out.println("Owner Found");                              //Creates special message when owner is writing
+                            System.out.println("Owner Found");
                         } else {
-                            broadcast(nickname + ": " + message, nickname); //default message
+                            broadcast(nickname + ": " + message, nickname);
                         }
                     }
                 }
             } catch (IOException e) {
-                shutdown();         //if nothing works, turn off
+                shutdown();
             }
         }
         public void sendMessage(String message) {
@@ -119,7 +121,7 @@ public class Server implements Runnable {
         public void shutdown() {
             try {
                 in.close();
-                out.close();                //Shuts down server and kicks clients
+                out.close();
                 if (!client.isClosed()) {
                     client.close();
                 }

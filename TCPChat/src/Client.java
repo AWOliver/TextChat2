@@ -16,7 +16,8 @@ public class Client implements Runnable{
 
             //Activates client side and creates passage for messages.
             System.out.println("Welcome to Thunder Chat!\n");
-            System.out.println("Here you can communicate with your friends in real time, while simultaneously being granted some functions\n");
+            System.out.println("Here you can communicate with your friends in real time, while simultaneously being granted some useful functions\n");
+            System.out.println("");
             System.out.println("");
             client = new Socket("localhost", 9999);
             out = new PrintWriter(client.getOutputStream(), true);
