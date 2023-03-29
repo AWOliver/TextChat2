@@ -1,3 +1,5 @@
+package Mane;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -15,14 +17,12 @@ public class Server implements Runnable {
     private boolean done;
     private ExecutorService pool;
 
-    public Server() {
+    public Server() { //declares list for users and boolean for shutdown
         connections = new ArrayList<>();
         done = false;
     }
-    //declares list for users and boolean for shutdown
-
     @Override
-    public void run() {
+    public void run() { //creates server and connects clients
 
         try {
             server = new ServerSocket(9999);
@@ -37,9 +37,7 @@ public class Server implements Runnable {
             shutdown();
         }
     }
-    //creates server and connects clients
-
-    public void broadcast(String message, String nickname) {
+    public void broadcast(String message, String nickname) { //template for message broadcast
         for (ConnectionHandler ch : connections) {
             if (ch != null) {
                 if (ch.nickname.equals(nickname)) {
@@ -49,8 +47,7 @@ public class Server implements Runnable {
             }
         }
     }
-    //template for message broadcast
-    public void shutdown() {
+    public void shutdown() { //shutdown method
         try {
             done = true;
             pool.shutdown();
@@ -60,11 +57,10 @@ public class Server implements Runnable {
             for (ConnectionHandler ch : connections) {
                 ch.shutdown();
             }
-        } catch (IOException e) {
+        } catch (IOException ignored) {
 
         }
     }
-    //shutdown method
     class ConnectionHandler implements Runnable {
 
         private final Socket client;
@@ -74,10 +70,10 @@ public class Server implements Runnable {
 
         public ConnectionHandler(Socket client) { //Creates a method to access a specific client to the server
             this.client = client;
-        }
+        } //connects client to method
 
         @Override
-        public void run() {
+        public void run() { //Creates i/o  and commands for clients
             try {
                 out = new PrintWriter(client.getOutputStream(), true);
                 in = new BufferedReader(new InputStreamReader(client.getInputStream()));
@@ -104,8 +100,8 @@ public class Server implements Runnable {
                         //shutdown();
                     } else {
                         if(nickname.equalsIgnoreCase("Ollibolli")) {
-                            broadcast("(Owner) " + nickname + ": " + message, nickname);
-                            System.out.println("Owner Found");
+                            broadcast("(Admin) " + nickname + ": " + message, nickname);
+                            System.out.println("Admin Found");
                         } else {
                             broadcast(nickname + ": " + message, nickname);
                         }
@@ -117,7 +113,7 @@ public class Server implements Runnable {
         }
         public void sendMessage(String message) {
             out.println(message);
-        }
+        } //sends message
         public void shutdown() {
             try {
                 in.close();

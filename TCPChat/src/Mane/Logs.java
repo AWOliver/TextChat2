@@ -1,3 +1,5 @@
+package Mane;
+
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -10,8 +12,8 @@ public BufferedWriter log;
     public void logInput(String message) {
         try {
             log = new BufferedWriter(new FileWriter("logs.txt"));
-            log.write(message + "\n\n");
-            log.close();
+            log.write(message + "\n");
+
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
