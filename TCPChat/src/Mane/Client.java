@@ -17,8 +17,7 @@ public class Client implements Runnable{
         try {
 
             System.out.println("Welcome to Thunder Chat!\n");
-            System.out.println("Here you can communicate with your friends in real time, while simultaneously being granted some useful functions\n");
-            System.out.println("");
+            System.out.println("Here you can communicate with your friends in real time, \nwhile simultaneously being granted some useful functions\n");
             client = new Socket("localhost", 9999);
             out = new PrintWriter(client.getOutputStream(), true);
             in = new BufferedReader(new InputStreamReader(client.getInputStream()));
