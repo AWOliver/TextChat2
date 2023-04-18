@@ -30,8 +30,8 @@ public class Server implements Runnable {
             while (!done) {
                 Socket client = server.accept();
                 ConnectionHandler handler = new ConnectionHandler(client);
-                connections.add(handler);
                 pool.execute(handler);
+                connections.add(handler);
             }
         } catch (IOException e) {
             shutdown();
@@ -39,8 +39,15 @@ public class Server implements Runnable {
     }
     public void broadcast(String message, String nickname) { //template for message broadcast
         for (ConnectionHandler ch : connections) {
+
             if (ch != null) {
-                if (ch.nickname.equals(nickname)) {
+                if (ch.getNickname() == null) {
+                    System.out.println(ch);
+                    continue;
+                }
+
+                System.out.println(ch.getNickname());
+                if (ch.getNickname().equals(nickname)) {
                     continue;
                 }
                 ch.sendMessage(message);
@@ -66,7 +73,8 @@ public class Server implements Runnable {
         private final Socket client;
         private BufferedReader in;
         private PrintWriter out;
-        private String nickname;
+
+        public String nickname;
 
         public ConnectionHandler(Socket client) { //Creates a method to access a specific client to the server
             this.client = client;
@@ -80,6 +88,7 @@ public class Server implements Runnable {
                 out.println("Please enter a nickname: ");
                 nickname = in.readLine(); // sets nickname
                 System.out.println(nickname + " connected!");
+
                 broadcast(nickname + " joined the chat!", nickname);
                 String message;
                 while ((message = in.readLine()) != null) {
@@ -124,6 +133,9 @@ public class Server implements Runnable {
             } catch (IOException e) {
                 //ignore
             }
+        }
+        public String getNickname() {
+            return nickname;
         }
     }
 
