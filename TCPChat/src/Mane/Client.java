@@ -2,6 +2,7 @@ package Mane;
 
 import java.io.*;
 import java.net.Socket;                 //import
+import java.util.Scanner;
 
 
 public class Client implements Runnable{
@@ -18,6 +19,10 @@ public class Client implements Runnable{
 
             System.out.println("Welcome to Thunder Chat!\n");
             System.out.println("Here you can communicate with your friends in real time, \nwhile simultaneously being granted some useful functions\n");
+            Scanner switchScan = new Scanner(System.in);
+            System.out.println("Start chatting: Press 1");
+            System.out.println("Instructions: Press 2");
+            System.out.println("Logs: Press 3");
             client = new Socket("localhost", 9999);
             out = new PrintWriter(client.getOutputStream(), true);
             in = new BufferedReader(new InputStreamReader(client.getInputStream()));
