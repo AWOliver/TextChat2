@@ -1,5 +1,7 @@
 package Mane;
 
+import com.sun.jdi.IntegerValue;
+
 import java.io.*;
 import java.net.Socket;                 //import
 import java.util.Scanner;
@@ -12,6 +14,7 @@ public class Client implements Runnable{
     private PrintWriter out;
     private boolean done;
 
+    public boolean keep;
     Logs logs = new Logs();
     @Override
     public void run() { //Activates client side, creates interface and creates passage for messages.
@@ -23,6 +26,13 @@ public class Client implements Runnable{
             System.out.println("Start chatting: Press 1");
             System.out.println("Instructions: Press 2");
             System.out.println("Logs: Press 3");
+
+            int switchNum = Integer.parseInt(String.valueOf(switchScan));
+
+            switch (switchNum){
+                case 1:
+                    keep = true;
+            }
             client = new Socket("localhost", 9999);
             out = new PrintWriter(client.getOutputStream(), true);
             in = new BufferedReader(new InputStreamReader(client.getInputStream()));

@@ -83,40 +83,43 @@ public class Server implements Runnable {
         @Override
         public void run() { //Creates i/o  and commands for clients
             try {
+                Client client1 = new Client();
                 out = new PrintWriter(client.getOutputStream(), true);
                 in = new BufferedReader(new InputStreamReader(client.getInputStream()));
-                out.println("Please enter a nickname: ");
-                nickname = in.readLine(); // sets nickname
-                System.out.println(nickname + " connected!");
+                if (client1.keep = true) {
+                    out.println("Please enter a nickname: ");
+                    nickname = in.readLine(); // sets nickname
+                    System.out.println(nickname + " connected!");
 
-                broadcast(nickname + " joined the chat!", nickname);
-                String message;
-                while ((message = in.readLine()) != null) {
-                    if (message.startsWith("/newName")) {
-                        String[] messageSplit = message.split(" ", 2);
-                        if (messageSplit.length == 2) {
-                            broadcast(nickname + " renamed themselves to " + messageSplit[1], nickname);
-                            System.out.println(nickname + " changed nickname to " + messageSplit[1]);
-                            nickname = messageSplit[1]; //sets new nickname
-                            out.println("Successfully changed nickname to " + nickname);
+                    broadcast(nickname + " joined the chat!", nickname);
+                    String message;
+                    while ((message = in.readLine()) != null) {
+                        if (message.startsWith("/newName")) {
+                            String[] messageSplit = message.split(" ", 2);
+                            if (messageSplit.length == 2) {
+                                broadcast(nickname + " renamed themselves to " + messageSplit[1], nickname);
+                                System.out.println(nickname + " changed nickname to " + messageSplit[1]);
+                                nickname = messageSplit[1]; //sets new nickname
+                                out.println("Successfully changed nickname to " + nickname);
+                            } else {
+                                out.println("No nickname provided!");
+                            }
+                        } else if (message.startsWith("/quit")) {
+                            shutdown();
+                            broadcast(nickname + " left the chat!", nickname);
+                            System.out.println(nickname + " disconnected!");
+                            //shutdown();
                         } else {
-                            out.println("No nickname provided!");
-                        }
-                    } else if (message.startsWith("/quit")) {
-                        shutdown();
-                        broadcast(nickname + " left the chat!", nickname);
-                        System.out.println(nickname + " disconnected!");
-                        //shutdown();
-                    } else {
-                        if(nickname.equalsIgnoreCase("Ollibolli")) {
-                            broadcast("(Admin) " + nickname + ": " + message, nickname);
-                            System.out.println("Admin Found");
-                        } else {
-                            broadcast(nickname + ": " + message, nickname);
+                            if (nickname.equalsIgnoreCase("Ollibolli")) {
+                                broadcast("(Admin) " + nickname + ": " + message, nickname);
+                                System.out.println("Admin Found");
+                            } else {
+                                broadcast(nickname + ": " + message, nickname);
+                            }
                         }
                     }
                 }
-            } catch (IOException e) {
+            }catch (IOException e) {
                 shutdown();
             }
         }
