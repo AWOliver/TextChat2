@@ -14,12 +14,12 @@ public class Client implements Runnable{
     private PrintWriter out;
     private boolean done;
 
-    public boolean keep;
-    Logs logs = new Logs();
+    public boolean start;
     @Override
     public void run() { //Activates client side, creates interface and creates passage for messages.
         try {
 
+            start = false;
             System.out.println("Welcome to Thunder Chat!\n");
             System.out.println("Here you can communicate with your friends in real time, \nwhile simultaneously being granted some useful functions\n");
             Scanner switchScan = new Scanner(System.in);
@@ -31,7 +31,15 @@ public class Client implements Runnable{
 
             switch (switchNum){
                 case 1:
-                    keep = true;
+                    start = true;
+                    break;
+
+                case 2:
+                    info();
+                    break;
+
+                case 3:
+
             }
             client = new Socket("localhost", 9999);
             out = new PrintWriter(client.getOutputStream(), true);
@@ -49,6 +57,14 @@ public class Client implements Runnable{
         } catch (IOException e) {
             shutdown();
         }
+    }
+
+    public void info(){
+        System.out.println("These are the instructions for the Thunder Chat\n");
+        System.out.println("Commands:\n");
+        System.out.println("/quit: write to exit the chat\n");
+        System.out.println("/newName: Write this command and the write your new desired nickname\n");
+        System.out.println("Ollibolli: If you enter this nickname you will be granted Admin");
     }
 
     public void shutdown() {
@@ -72,7 +88,7 @@ public class Client implements Runnable{
                 while (!done) {
                     String message = inReader.readLine();
                     if(message != null) {
-                        logs.logInput(message);
+                        Logs.logInput(message);
                     }
                     assert message != null;
                     if (message.equals("/quit")) {

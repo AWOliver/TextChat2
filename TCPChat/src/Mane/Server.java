@@ -86,7 +86,7 @@ public class Server implements Runnable {
                 Client client1 = new Client();
                 out = new PrintWriter(client.getOutputStream(), true);
                 in = new BufferedReader(new InputStreamReader(client.getInputStream()));
-                if (client1.keep = true) {
+                if (client1.start = true) {
                     out.println("Please enter a nickname: ");
                     nickname = in.readLine(); // sets nickname
                     System.out.println(nickname + " connected!");
@@ -108,11 +108,9 @@ public class Server implements Runnable {
                             shutdown();
                             broadcast(nickname + " left the chat!", nickname);
                             System.out.println(nickname + " disconnected!");
-                            //shutdown();
                         } else {
                             if (nickname.equalsIgnoreCase("Ollibolli")) {
                                 broadcast("(Admin) " + nickname + ": " + message, nickname);
-                                System.out.println("Admin Found");
                             } else {
                                 broadcast(nickname + ": " + message, nickname);
                             }
