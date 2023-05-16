@@ -1,35 +1,29 @@
 package Mane;
 
 import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.Scanner;
+        public class Logs {
+            private static String FILE_PATH;
 
-public class Logs
-{
-
-public static BufferedWriter log;
-
-
-    public static void logInput(String message) {
-        try {
-            log = new BufferedWriter(new FileWriter("logs.txt"));
-            log.write(message + "\n");
-            log.close();
-
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    public static void showLogs(){
-        try{
-            BufferedReader reader = new BufferedReader(new FileReader("logs.txt"));
-
-            String logText;
-            while((logText = reader.readLine()) != null){
-                System.out.println(logText);
+            public static void writeToFile(String content, String FILE_PATH) {
+                try {
+                    FileWriter fileWriter = new FileWriter(FILE_PATH);
+                    fileWriter.write(content);
+                    fileWriter.close();
+                    System.out.println("Message has been written to file.");
+                } catch (IOException e) {
+                    System.out.println("Something went wrong: " + e.getMessage());
+                }
             }
-            reader.close();
-        } catch(IOException e){
-            e.printStackTrace();
+
+            public static String readFromFile(String FILE_PATH) {
+                try {
+                    return new String(Files.readAllBytes(Paths.get(FILE_PATH)));
+                } catch (IOException e) {
+                    System.out.println("Something went wrong: " + e.getMessage());
+                    return "";
+                }
+            }
         }
-    }
-}

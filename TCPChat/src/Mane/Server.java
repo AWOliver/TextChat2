@@ -109,12 +109,11 @@ public class Server implements Runnable {
                         } else {
                             if (nickname.equalsIgnoreCase("Ollibolli")) {
                                 broadcast("(Admin) " + nickname + ": " + message, nickname);
-                            } else if(message.startsWith("/logs")){
-                                Logs.showLogs();
+                            } else if(message.startsWith("/particle")){
+                                Logs.readFromFile(particle);
                             }
                             else {
                                 broadcast(nickname + ": " + message, nickname);
-                                Logs.logInput(message);
                             }
                         }
                     }
