@@ -83,10 +83,8 @@ public class Server implements Runnable {
         @Override
         public void run() { //Creates i/o  and commands for clients
             try {
-                Client client1 = new Client();
                 out = new PrintWriter(client.getOutputStream(), true);
                 in = new BufferedReader(new InputStreamReader(client.getInputStream()));
-                if (client1.start = true) {
                     out.println("Please enter a nickname: ");
                     nickname = in.readLine(); // sets nickname
                     System.out.println(nickname + " connected!");
@@ -111,17 +109,21 @@ public class Server implements Runnable {
                         } else {
                             if (nickname.equalsIgnoreCase("Ollibolli")) {
                                 broadcast("(Admin) " + nickname + ": " + message, nickname);
-                            } else {
+                            } else if(message.startsWith("/logs")){
+                                Logs.showLogs();
+                            }
+                            else {
                                 broadcast(nickname + ": " + message, nickname);
+                                Logs.logInput(message);
                             }
                         }
                     }
+
+                }catch(IOException e){
+                    shutdown();
                 }
-            }catch (IOException e) {
-                shutdown();
-            }
         }
-        public void sendMessage(String message) {
+         public void sendMessage(String message) {
             out.println(message);
         } //sends message
         public void shutdown() {
