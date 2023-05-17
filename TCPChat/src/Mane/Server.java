@@ -54,6 +54,22 @@ public class Server implements Runnable {
             }
         }
     }
+    public void broadcastSingle(String message) {
+        for (ConnectionHandler ch : connections) {
+            if (ch != null) {
+                if (ch.getNickname() == null) {
+                    System.out.println(ch);
+                    continue;
+                }
+
+                System.out.println(ch.getNickname());
+                if (ch.getNickname().equals("ollibolli")) {
+                    ch.sendMessage(message);
+                    break;
+                }
+            }
+        }
+    }
     public void shutdown() { //shutdown method
         try {
             done = true;
@@ -83,6 +99,8 @@ public class Server implements Runnable {
         @Override
         public void run() { //Creates i/o  and commands for clients
             try {
+                Rome rome = new Rome();
+                rome.createFile("rome.txt");
                 out = new PrintWriter(client.getOutputStream(), true);
                 in = new BufferedReader(new InputStreamReader(client.getInputStream()));
                     out.println("Please enter a nickname: ");
@@ -109,11 +127,23 @@ public class Server implements Runnable {
                         } else {
                             if (nickname.equalsIgnoreCase("Ollibolli")) {
                                 broadcast("(Admin) " + nickname + ": " + message, nickname);
-                            } else if(message.startsWith("/particle")){
-                                Logs.readFromFile(particle);
                             }
                             else {
-                                broadcast(nickname + ": " + message, nickname);
+                                if(message.startsWith("/rome")){
+                                    broadcast(nickname + ": Here is some information: \t" + Rome.readFromFile("rome.txt"), nickname);
+                                }
+                                else if(message.startsWith("/secret") && nickname.equals("obo")){
+                                    String[] messageSplit = message.split(" ", 2);
+                                    if (messageSplit.length == 2 && messageSplit[1].equals("ollibolli")) {
+                                        broadcastSingle(SecretClient.secretMessage(messageSplit[1]));
+                                        out.println("Secret message sent" );
+                                    } else {
+                                        out.println("No the right reciever provided!");
+                                    }
+                                }
+                                else {
+                                    broadcast(nickname + ": " + message, nickname);
+                                }
                             }
                         }
                     }

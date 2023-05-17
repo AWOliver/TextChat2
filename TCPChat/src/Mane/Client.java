@@ -38,8 +38,11 @@ public class Client implements Runnable{
         System.out.println("These are the instructions for the Thunder Chat\n");
         System.out.println("Commands:\n");
         System.out.println("/quit: write to exit the chat\n");
+        System.out.println("/secret: as obo you can use this command for secret messages");
+        System.out.println("/rome: get some information about the roman empire");
         System.out.println("/newName: Write this command and the write your new desired nickname\n");
-        System.out.println("Ollibolli: If you enter this nickname you will be granted Admin");
+        System.out.println("ollibolli: If you enter this nickname you will be granted Admin\n");
+        System.out.println("obo: This username will give you access to secret messaging to admin");
     }
 
     public void shutdown() {
