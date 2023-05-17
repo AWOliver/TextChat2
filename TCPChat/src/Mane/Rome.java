@@ -4,8 +4,10 @@ import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
+//This class contains the usage of files in the chat
 public class Rome {
 
+    //creates a file and gives it content
     public void createFile(String fileName) {
         try {
             File rome = new File(fileName);
@@ -22,6 +24,7 @@ public class Rome {
         }
     }
 
+    //used to read from a file
     public static String readFromFile(String file) {
                 try {
                     return new String(Files.readAllBytes(Paths.get(file)));

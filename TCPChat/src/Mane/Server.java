@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+//This contains the servers functionality
 public class Server implements Runnable {
 
     private final ArrayList<ConnectionHandler> connections;
@@ -17,12 +18,15 @@ public class Server implements Runnable {
     private boolean done;
     private ExecutorService pool;
 
-    public Server() { //declares list for users and boolean for shutdown
+    //declares list for users and boolean for shutdown
+    public Server() {
         connections = new ArrayList<>();
         done = false;
     }
+
+    //creates server and connects clients
     @Override
-    public void run() { //creates server and connects clients
+    public void run() {
 
         try {
             server = new ServerSocket(9999);
@@ -37,7 +41,9 @@ public class Server implements Runnable {
             shutdown();
         }
     }
-    public void broadcast(String message, String nickname) { //template for message broadcast
+
+    //template for message broadcast
+    public void broadcast(String message, String nickname) {
         for (ConnectionHandler ch : connections) {
 
             if (ch != null) {
@@ -54,7 +60,9 @@ public class Server implements Runnable {
             }
         }
     }
-    public void broadcastSingle(String message) {
+
+    //a method for sending messages to only admin
+    public void broadcastSecret(String message) {
         for (ConnectionHandler ch : connections) {
             if (ch != null) {
                 if (ch.getNickname() == null) {
@@ -70,7 +78,9 @@ public class Server implements Runnable {
             }
         }
     }
-    public void shutdown() { //shutdown method
+
+    //shutdown method
+    public void shutdown() {
         try {
             done = true;
             pool.shutdown();
@@ -84,6 +94,8 @@ public class Server implements Runnable {
 
         }
     }
+
+    //This class is used to handle the communications between clients
     class ConnectionHandler implements Runnable {
 
         private final Socket client;
@@ -92,12 +104,14 @@ public class Server implements Runnable {
 
         public String nickname;
 
+        //connects client to the socket through method
         public ConnectionHandler(Socket client) { //Creates a method to access a specific client to the server
             this.client = client;
-        } //connects client to method
+        }
 
+        //Creates i/o  and commands for clients
         @Override
-        public void run() { //Creates i/o  and commands for clients
+        public void run() {
             try {
                 Rome rome = new Rome();
                 rome.createFile("rome.txt");
@@ -135,7 +149,7 @@ public class Server implements Runnable {
                                 else if(message.startsWith("/secret") && nickname.equals("obo")){
                                     String[] messageSplit = message.split(" ", 2);
                                     if (messageSplit.length == 2 && messageSplit[1].equals("ollibolli")) {
-                                        broadcastSingle(SecretClient.secretMessage(messageSplit[1]));
+                                        broadcastSecret(SecretClient.secretMessage(messageSplit[1]));
                                         out.println("Secret message sent" );
                                     } else {
                                         out.println("No the right reciever provided!");
@@ -152,9 +166,13 @@ public class Server implements Runnable {
                     shutdown();
                 }
         }
+
+        //A method for writing a message
          public void sendMessage(String message) {
             out.println(message);
-        } //sends message
+        }
+
+        //Used to end communication for clients
         public void shutdown() {
             try {
                 in.close();
@@ -163,14 +181,17 @@ public class Server implements Runnable {
                     client.close();
                 }
             } catch (IOException e) {
-                //ignore
+                System.out.println("could not shutdown");
             }
         }
+
+        //Used to connect a socket port to a nickname
         public String getNickname() {
             return nickname;
         }
     }
 
+    //runs the program
     public static void main(String[] args) {
         Server server = new Server();
          server.run();
